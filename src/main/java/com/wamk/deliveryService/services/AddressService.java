@@ -1,13 +1,13 @@
 package com.wamk.deliveryService.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wamk.deliveryService.entities.Address;
 import com.wamk.deliveryService.repositories.AddressRepository;
+import com.wamk.deliveryService.services.exception.EntityNotFoundException;
 
 @Service
 public class AddressService {
@@ -20,7 +20,7 @@ public class AddressService {
 	}
 	
 	public Address findById(Long id) {
-		Optional<Address> address = addressRepository.findById(id);
-		return address.get();
+		return addressRepository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException("Id not found: " + id));
 	}
 }

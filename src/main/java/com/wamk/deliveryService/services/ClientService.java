@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.wamk.deliveryService.entities.Client;
 import com.wamk.deliveryService.repositories.ClientRepository;
+import com.wamk.deliveryService.services.exception.EntityNotFoundException;
 
 @Service
 public class ClientService {
@@ -20,7 +21,8 @@ public class ClientService {
 	}
 	
 	public Client findById(Long id) {
-		Optional<Client> client = clientRepository.findById(id);
-		return client.get();
+		return clientRepository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException("Id not found: " + id));
+				
 	}
 }
