@@ -25,7 +25,7 @@ public class Client implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String contado;
+	private String contato;
 		
 	@JsonIgnore
 	@OneToMany(mappedBy = "client")
@@ -40,11 +40,11 @@ public class Client implements Serializable{
 	public Client() {
 	}
 
-	public Client(Long id, String name, String contado, Address address, Double total) {
+	public Client(Long id, String name, String contato, Address address, Double total) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.contado = contado;
+		this.contato = contato;
 		this.address = address;
 		this.total= total;
 	}
@@ -65,12 +65,12 @@ public class Client implements Serializable{
 		this.name = name;
 	}
 
-	public String getContado() {
-		return contado;
+	public String getContato() {
+		return contato;
 	}
 
-	public void setContado(String contado) {
-		this.contado = contado;
+	public void setContato(String contato) {
+		this.contato = contato;
 	}
 
 	public List<Order> getOrders() {
