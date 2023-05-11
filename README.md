@@ -14,6 +14,14 @@ Uma api de serviço online que permite que os usuários façam pedidos de alimen
 - JPA / Hibernate
 - Maven
 
+# Pré-requisitos: 
+Java 17
+
+```bash
+# clonar repositório
+git clone git@github.com:Wilson-Pedro/spring-delivery-food-jpa.git
+
+```
 
 # Autor
 
