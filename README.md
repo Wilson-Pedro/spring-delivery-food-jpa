@@ -24,7 +24,7 @@ git clone git@github.com:Wilson-Pedro/spring-delivery-food-jpa.git
 ```
 
 # Autor
+- [@Wilson Pedro](https://github.com/Wilson-Pedro)
 
-Wilson Pedro Costa Neto
-
+# Linkedin
 https://www.linkedin.com/in/wilson-pedro-976333226/
