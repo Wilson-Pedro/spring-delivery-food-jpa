@@ -1,7 +1,9 @@
 package com.wamk.deliveryService.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.OffsetDateTime;
+
+import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wamk.deliveryService.entities.enums.OrderStatus;
@@ -26,8 +28,8 @@ public class Order implements Serializable{
 	private Double price;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-	private Instant dataPedido;
-	private Instant dataEntrega;
+	private OffsetDateTime dataPedido;
+	private OffsetDateTime dataEntrega;
 	
 	private Integer status;
 	
@@ -38,8 +40,7 @@ public class Order implements Serializable{
 	public Order() {
 	}
 
-	public Order(Long id, String nameOrder, Double price, Instant dataPedido, Instant dataEntrega, OrderStatus status, Client client) {
-		super();
+	public Order(Long id, String nameOrder, Double price, OffsetDateTime dataPedido, OffsetDateTime dataEntrega, OrderStatus status, Client client) {
 		this.id = id;
 		this.nameOrder = nameOrder;
 		this.price = price;
@@ -73,19 +74,19 @@ public class Order implements Serializable{
 		this.price = price;
 	}
 
-	public Instant getDataPedido() {
+	public OffsetDateTime getDataPedido() {
 		return dataPedido;
 	}
 
-	public void setDataPedido(Instant dataPedido) {
+	public void setDataPedido(OffsetDateTime dataPedido) {
 		this.dataPedido = dataPedido;
 	}
 
-	public Instant getDataEntrega() {
+	public OffsetDateTime getDataEntrega() {
 		return dataEntrega;
 	}
 
-	public void setDataEntrega(Instant dataEntrega) {
+	public void setDataEntrega(OffsetDateTime dataEntrega) {
 		this.dataEntrega = dataEntrega;
 	}
 
@@ -130,5 +131,18 @@ public class Order implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	public Order finalizar(Order order) {
+		if(NaoPodeSerFinalizada()) {
+			return order;
+		}
+		order.setStatus(OrderStatus.FINALIZADA);
+		order.setId(order.getId());
+		return order;
+	}
+	
+	public boolean NaoPodeSerFinalizada() {
+		return OrderStatus.FINALIZADA.equals(getStatus());
 	}
 }

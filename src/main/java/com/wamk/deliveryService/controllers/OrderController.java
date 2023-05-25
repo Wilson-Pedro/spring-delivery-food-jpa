@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wamk.deliveryService.api.assembler.EntregaAssembler;
 import com.wamk.deliveryService.dtos.OrderDTO;
 import com.wamk.deliveryService.entities.Order;
+import com.wamk.deliveryService.entities.enums.OrderStatus;
+import com.wamk.deliveryService.services.FinalizeOrderService;
 import com.wamk.deliveryService.services.OrderService;
 
 import jakarta.validation.Valid;
@@ -26,6 +30,12 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private EntregaAssembler entregaAssembler;
+	
+	@Autowired
+	private FinalizeOrderService finalizeOrderService;
 
 	@GetMapping
 	public ResponseEntity<List<Order>> findAll(){
@@ -40,10 +50,19 @@ public class OrderController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Order> saveCleint(@Valid @RequestBody OrderDTO orderDTO){
-		var order = new Order();
-		BeanUtils.copyProperties(orderDTO, order);
-		return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(order));
+	@ResponseStatus(HttpStatus.CREATED)
+	public OrderDTO saveCleint(@Valid @RequestBody OrderDTO orderDTO){
+//		var order = new Order();
+//		BeanUtils.copyProperties(orderDTO, order);
+//		return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(order));
+		Order order = entregaAssembler.toEntity(orderDTO);
+		Order orderSave = orderService.save(order);
+		return entregaAssembler.toDTO(orderSave);
+		
+//		Entrega novaEntrega = entregaAssembler.toEntity(entregaInput);
+//		Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(novaEntrega);
+//		
+//		return entregaAssembler.toModel(entregaSolicitada);
 	}
 	
 	@PutMapping(value = "/{id}")
@@ -54,5 +73,11 @@ public class OrderController {
 		BeanUtils.copyProperties(orderDTO, order);
 		order.setId(obj.getId());
 		return ResponseEntity.ok(orderService.save(order));
+	}
+	
+	@PutMapping(value = "/{id}/finalizacao")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void finalizeOrder(@PathVariable Long id){
+		finalizeOrderService.finalizar(id);
 	}
 }

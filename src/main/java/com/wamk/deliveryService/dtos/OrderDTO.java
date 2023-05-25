@@ -14,12 +14,15 @@ public class OrderDTO implements Serializable{
 	@NotNull(message = "price is mandatory")
 	private Double price;
 	
+	private ClientDTO cliente;
+	
 	public OrderDTO() {
 	}
 
-	public OrderDTO(String nameOrder, Double price) {
+	public OrderDTO(String nameOrder, Double price, ClientDTO cliente) {
 		this.nameOrder = nameOrder;
 		this.price = price;
+		this.cliente = cliente;
 	}
 
 	public String getNameOrder() {
@@ -36,5 +39,13 @@ public class OrderDTO implements Serializable{
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public ClientDTO getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(ClientDTO cliente) {
+		this.cliente = cliente;
 	}
 }
