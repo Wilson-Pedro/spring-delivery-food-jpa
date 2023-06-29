@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wamk.deliveryService.dtos.ClientDTO;
+import com.wamk.deliveryService.dtos.ClientNewDTO;
 import com.wamk.deliveryService.entities.Client;
 import com.wamk.deliveryService.services.ClientService;
 
@@ -40,11 +41,12 @@ public class ClientController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Client> saveCleint(@Valid @RequestBody ClientDTO clientDTO){
-		var client = new Client();
-		BeanUtils.copyProperties(clientDTO, client);
+	public ResponseEntity<Client> saveCleint(@Valid @RequestBody ClientNewDTO clientNewDTO){
+		var client = clientService.fromDTO(clientNewDTO);
+		client.setId(null);
 		client.setTotal(0.0);
-		return ResponseEntity.status(HttpStatus.CREATED).body(clientService.save(client));
+		client = clientService.insert(client);
+		return ResponseEntity.status(HttpStatus.CREATED).body(client);
 	}
 	
 	@PutMapping(value = "/{id}")
