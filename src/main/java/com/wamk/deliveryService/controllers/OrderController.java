@@ -1,5 +1,8 @@
 package com.wamk.deliveryService.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -18,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wamk.deliveryService.api.assembler.EntregaAssembler;
 import com.wamk.deliveryService.dtos.OrderDTO;
 import com.wamk.deliveryService.entities.Order;
-import com.wamk.deliveryService.entities.enums.OrderStatus;
 import com.wamk.deliveryService.services.FinalizeOrderService;
 import com.wamk.deliveryService.services.OrderService;
 
@@ -40,12 +42,19 @@ public class OrderController {
 	@GetMapping
 	public ResponseEntity<List<Order>> findAll(){
 		List<Order> list = orderService.findAll();
+		if(!list.isEmpty()) {
+			for(Order order : list) {
+				Long id = order.getId();
+				order.add(linkTo(methodOn(OrderController.class).findById(id)).withSelfRel());
+			}
+		}
 		return ResponseEntity.ok().body(list);
 	}
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Order> findById(@PathVariable Long id){
 		Order order = orderService.findById(id);
+		order.add(linkTo(methodOn(OrderController.class).findAll()).withSelfRel());
 		return ResponseEntity.ok().body(order);
 	}
 	

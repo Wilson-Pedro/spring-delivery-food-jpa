@@ -11,7 +11,10 @@ public class OrderDTO implements Serializable{
 	@NotBlank(message = "nameOrder is mandatory")
 	private String nameOrder;
 	
-	@NotNull(message = "price is mandatory")
+	@NotNull(message = "quantity cannot be null")
+	private Integer quantity;
+	
+	@NotNull(message = "price cannot be null")
 	private Double price;
 	
 	private ClientDTO cliente;
@@ -19,8 +22,9 @@ public class OrderDTO implements Serializable{
 	public OrderDTO() {
 	}
 
-	public OrderDTO(String nameOrder, Double price, ClientDTO cliente) {
+	public OrderDTO(String nameOrder, Integer quantity, Double price, ClientDTO cliente) {
 		this.nameOrder = nameOrder;
+		this.quantity = quantity;
 		this.price = price;
 		this.cliente = cliente;
 	}
@@ -31,6 +35,14 @@ public class OrderDTO implements Serializable{
 
 	public void setNameOrder(String nameOrder) {
 		this.nameOrder = nameOrder;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
 	public Double getPrice() {

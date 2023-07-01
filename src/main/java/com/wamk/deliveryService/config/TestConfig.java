@@ -35,22 +35,17 @@ public class TestConfig implements CommandLineRunner{
 		Address ad1 = new Address(null, "1234-5670", "Goiabas", "Rua das flores", 10);
 		Address ad2 = new Address(null, "9804-3290", "Limões", "Rua das rosas", 11);
 		
-		Client c1 = new Client(null, "Lucas", "98 1245-6578", ad1, 0.0);
-		Client c2 = new Client(null, "Julia", "98 9935-6578", ad2, 0.0);
+		Client c1 = new Client(null, "Lucas", "98 1245-6578", ad1);
+		Client c2 = new Client(null, "Julia", "98 9935-6578", ad2);
 		
-		Order o1 = new Order(null, "Refrigerante", 2.50, OffsetDateTime.now(), null, OrderStatus.READY, c1);
-		Order o2 = new Order(null, "Hamburguer", 10.0, OffsetDateTime.now(), null, OrderStatus.PREPARING, c1);
-		Order o3 = new Order(null, "Salada", 7.50, OffsetDateTime.parse("2023-03-21T16:49:05Z"), null,OrderStatus.SHIPPED, c2);
+		Order o1 = new Order(null, "Refrigerante", 2, 2.50, OffsetDateTime.now(), null, OrderStatus.READY, c1);
+		Order o2 = new Order(null, "Hamburguer", 1, 10.0, OffsetDateTime.now(), null, OrderStatus.PREPARING, c1);
+		Order o3 = new Order(null, "Salada", 1, 7.50, OffsetDateTime.parse("2023-03-21T16:49:05Z"), null,OrderStatus.SHIPPED, c2);
 		
 		addressRepository.saveAll(Arrays.asList(ad1, ad2));
 		clientRepository.saveAll(Arrays.asList(c1, c2));
 		orderRepository.saveAll(Arrays.asList(o1, o2, o3));
-		
-		double total1 = c1.getTotal();
-		double total2 = c2.getTotal();
-		
-		c1.setTotal(total1);
-		c2.setTotal(total2);
+
 		
 		clientRepository.saveAll(Arrays.asList(c1, c2));
 		

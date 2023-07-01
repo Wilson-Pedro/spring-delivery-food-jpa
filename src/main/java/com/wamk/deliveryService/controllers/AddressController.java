@@ -1,5 +1,8 @@
 package com.wamk.deliveryService.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -30,12 +33,19 @@ public class AddressController {
 	@GetMapping
 	public ResponseEntity<List<Address>> findAll(){
 		List<Address> list = addressService.findAll();
+		if(!list.isEmpty()) {
+			for(Address ads : list) {
+				Long id = ads.getId();
+				ads.add(linkTo(methodOn(AddressController.class).findById(id)).withSelfRel());
+			}
+		}
 		return ResponseEntity.ok().body(list);
 	}
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Address> findById(@PathVariable Long id){
 		Address address = addressService.findById(id);
+		address.add(linkTo(methodOn(AddressController.class).findAll()).withSelfRel());
 		return ResponseEntity.ok().body(address);
 	}
 	

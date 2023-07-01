@@ -2,6 +2,8 @@ package com.wamk.deliveryService.entities;
 
 import java.io.Serializable;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_ADDRESS")
-public class Address implements Serializable{
+public class Address extends RepresentationModel<Address> implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id

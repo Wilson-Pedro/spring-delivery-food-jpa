@@ -43,6 +43,11 @@ public class ClientService {
 		return clientRepository.findById(id).orElseThrow(
 				() -> new EntityNotFoundException("Id not found: " + id));	
 	}
+	
+	@Transactional
+	public Client findBytelefone(String telefone) {
+		return clientRepository.findBytelefone(telefone);
+	}
 
 	public void delete(Client client) {
 		clientRepository.delete(client);
@@ -50,7 +55,7 @@ public class ClientService {
 
 	public Client fromDTO(@Valid ClientNewDTO objDTO) {
 		Address adr = new Address(null, objDTO.getCEP(), objDTO.getBairro(), objDTO.getRua(), objDTO.getNumeroCasa());
-		Client cli = new Client(null, objDTO.getName(), objDTO.getContato(), adr, null);
+		Client cli = new Client(null, objDTO.getName(), objDTO.getTelefone(), adr);
 		return cli;
 	}
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -18,14 +20,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_CLIENT")
-public class Client implements Serializable{
+public class Client extends RepresentationModel<Client> implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String contato;
+	private String telefone;
 		
 	@JsonIgnore
 	@OneToMany(mappedBy = "client")
@@ -35,18 +37,17 @@ public class Client implements Serializable{
 	@JoinColumn(name = "id")
 	private Address address;
 	
-	private Double total;
+	//private Double total;
 
 	public Client() {
 	}
 
-	public Client(Long id, String name, String contato, Address address, Double total) {
+	public Client(Long id, String name, String telefone, Address address) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.contato = contato;
+		this.telefone = telefone;
 		this.address = address;
-		this.total= total;
 	}
 
 	public Long getId() {
@@ -65,12 +66,12 @@ public class Client implements Serializable{
 		this.name = name;
 	}
 
-	public String getContato() {
-		return contato;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setContato(String contato) {
-		this.contato = contato;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public List<Order> getOrders() {
@@ -85,14 +86,10 @@ public class Client implements Serializable{
 		this.address = address;
 	}
 
-	public void setTotal(Double total) {
-		this.total = total;
-	}
-
 	public Double getTotal() {
 		double sum = 0.0;
 		for(Order order : orders) {
-			sum += order.getPrice();
+			sum += order.getSubtotal();
 		}
 		return sum;
 	}

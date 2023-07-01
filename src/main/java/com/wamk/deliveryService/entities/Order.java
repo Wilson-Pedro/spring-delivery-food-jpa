@@ -3,7 +3,7 @@ package com.wamk.deliveryService.entities;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
-import org.springframework.beans.BeanUtils;
+import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wamk.deliveryService.entities.enums.OrderStatus;
@@ -18,13 +18,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TB_ORDER")
-public class Order implements Serializable{
+public class Order extends RepresentationModel<Order> implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nameOrder;
+	private Integer quantity;
 	private Double price;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
@@ -40,9 +41,10 @@ public class Order implements Serializable{
 	public Order() {
 	}
 
-	public Order(Long id, String nameOrder, Double price, OffsetDateTime dataPedido, OffsetDateTime dataEntrega, OrderStatus status, Client client) {
+	public Order(Long id, String nameOrder, Integer quantity, Double price, OffsetDateTime dataPedido, OffsetDateTime dataEntrega, OrderStatus status, Client client) {
 		this.id = id;
 		this.nameOrder = nameOrder;
+		this.quantity = quantity;
 		this.price = price;
 		this.dataPedido = dataPedido;
 		this.dataEntrega = dataEntrega;
@@ -64,6 +66,14 @@ public class Order implements Serializable{
 
 	public void setNameOrder(String nameOrder) {
 		this.nameOrder = nameOrder;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
 	public Double getPrice() {
@@ -106,6 +116,10 @@ public class Order implements Serializable{
 
 	public void setClient(Client client) {
 		this.client = client;
+	}
+	
+	public Double getSubtotal() {
+		return price * quantity;
 	}
 
 	@Override

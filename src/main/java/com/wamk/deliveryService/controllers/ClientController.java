@@ -1,5 +1,8 @@
 package com.wamk.deliveryService.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -31,20 +34,31 @@ public class ClientController {
 	@GetMapping
 	public ResponseEntity<List<Client>> findAll(){
 		List<Client> list = clientService.findAll();
+		if(!list.isEmpty()) {
+			for(Client client : list) {
+				Long id = client.getId();
+				client.add(linkTo(methodOn(ClientController.class).findById(id)).withSelfRel());
+			}
+		}
 		return ResponseEntity.ok().body(list);
 	}
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Client> findById(@PathVariable Long id){
 		Client client = clientService.findById(id);
+		client.add(linkTo(methodOn(ClientController.class).findAll()).withSelfRel());
 		return ResponseEntity.ok().body(client);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Client> saveCleint(@Valid @RequestBody ClientNewDTO clientNewDTO){
+	public ResponseEntity<Object> saveCleint(@Valid @RequestBody ClientNewDTO clientNewDTO){
 		var client = clientService.fromDTO(clientNewDTO);
+		var cli = client;
+		cli = clientService.findBytelefone(client.getTelefone());
+		if(cli != null) {
+			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Telefone já existente!");
+		}
 		client.setId(null);
-		client.setTotal(0.0);
 		client = clientService.insert(client);
 		return ResponseEntity.status(HttpStatus.CREATED).body(client);
 	}

@@ -14,7 +14,7 @@ public class ClientNewDTO implements Serializable{
 	private String name;
 	
 	@NotBlank(message = "contato is mandatory")
-	private String contato;
+	private String telefone;
 	
 	@NotBlank(message = "CEP is mandatory")
 	private String  CEP;
@@ -47,12 +47,12 @@ public class ClientNewDTO implements Serializable{
 		this.name = name;
 	}
 
-	public String getContato() {
-		return contato;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setContato(String contato) {
-		this.contato = contato;
+	public void setTelefone(String contato) {
+		this.telefone = contato;
 	}
 
 	public String getCEP() {

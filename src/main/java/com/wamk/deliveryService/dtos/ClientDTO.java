@@ -11,14 +11,14 @@ public class ClientDTO implements Serializable{
 	private String name;
 	
 	@NotBlank(message = "contato is mandatory")
-	private String contato;
+	private String telefone;
 	
 	public ClientDTO() {
 	}
 
-	public ClientDTO(String name, String contato, Double total) {
+	public ClientDTO(String name, String telefone, Double total) {
 		this.name = name;
-		this.contato = contato;
+		this.telefone = telefone;
 	}
 
 	public String getName() {
@@ -29,11 +29,11 @@ public class ClientDTO implements Serializable{
 		this.name = name;
 	}
 
-	public String getContato() {
-		return contato;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setContato(String contato) {
-		this.contato = contato;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 }
