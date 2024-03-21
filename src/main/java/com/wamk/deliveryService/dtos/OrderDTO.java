@@ -2,6 +2,7 @@ package com.wamk.deliveryService.dtos;
 
 import java.io.Serializable;
 
+import com.wamk.deliveryService.entities.Order;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,16 +18,22 @@ public class OrderDTO implements Serializable{
 	@NotNull(message = "price cannot be null")
 	private Double price;
 	
-	private ClientDTO cliente;
+	private ClientDTO clientDto;
 	
 	public OrderDTO() {
 	}
 
-	public OrderDTO(String nameOrder, Integer quantity, Double price, ClientDTO cliente) {
+	public OrderDTO(String nameOrder, Integer quantity, Double price, ClientDTO clientDto) {
 		this.nameOrder = nameOrder;
 		this.quantity = quantity;
 		this.price = price;
-		this.cliente = cliente;
+		this.clientDto = clientDto;
+	}
+
+	public OrderDTO(Order order) {
+		nameOrder = order.getNameOrder();
+		quantity = order.getQuantity();
+		price = order.getPrice();
 	}
 
 	public String getNameOrder() {
@@ -53,11 +60,11 @@ public class OrderDTO implements Serializable{
 		this.price = price;
 	}
 
-	public ClientDTO getCliente() {
-		return cliente;
+	public ClientDTO getClientDto() {
+		return clientDto;
 	}
 
-	public void setCliente(ClientDTO cliente) {
-		this.cliente = cliente;
+	public void setClientDto(ClientDTO clientDto) {
+		this.clientDto = clientDto;
 	}
 }

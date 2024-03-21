@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wamk.deliveryService.api.assembler.EntregaAssembler;
 import com.wamk.deliveryService.dtos.OrderDTO;
 import com.wamk.deliveryService.entities.Order;
-import com.wamk.deliveryService.services.FinalizeOrderService;
 import com.wamk.deliveryService.services.OrderService;
 
 import jakarta.validation.Valid;
@@ -35,9 +34,6 @@ public class OrderController {
 	
 	@Autowired
 	private EntregaAssembler entregaAssembler;
-	
-	@Autowired
-	private FinalizeOrderService finalizeOrderService;
 
 	@GetMapping
 	public ResponseEntity<List<Order>> findAll(){
@@ -59,34 +55,21 @@ public class OrderController {
 	}
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public OrderDTO saveCleint(@Valid @RequestBody OrderDTO orderDTO){
-//		var order = new Order();
-//		BeanUtils.copyProperties(orderDTO, order);
-//		return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(order));
-		Order order = entregaAssembler.toEntity(orderDTO);
-		Order orderSave = orderService.save(order);
-		return entregaAssembler.toDTO(orderSave);
-		
-//		Entrega novaEntrega = entregaAssembler.toEntity(entregaInput);
-//		Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(novaEntrega);
-//		
-//		return entregaAssembler.toModel(entregaSolicitada);
+	public ResponseEntity<OrderDTO> saveOrder(@Valid @RequestBody OrderDTO orderDTO){
+		Order orderSave = orderService.save(entregaAssembler.toEntity(orderDTO));
+		return ResponseEntity.status(HttpStatus.CREATED).body(entregaAssembler.toDTO(orderSave));
 	}
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Order> updateOrder(@Valid @RequestBody OrderDTO orderDTO, 
 			@PathVariable Long id){
-		Order obj = orderService.findById(id);
-		var order = new Order();
-		BeanUtils.copyProperties(orderDTO, order);
-		order.setId(obj.getId());
-		return ResponseEntity.ok(orderService.save(order));
+		Order orderUpdated = orderService.update(entregaAssembler.toEntity(orderDTO), id);
+		return ResponseEntity.ok(orderUpdated);
 	}
 	
 	@PutMapping(value = "/{id}/finalizacao")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void finalizeOrder(@PathVariable Long id){
-		finalizeOrderService.finalizar(id);
+	public ResponseEntity<Void> finalizeOrder(@PathVariable Long id){
+		orderService.finish(id);
+		return ResponseEntity.noContent().build();
 	}
 }

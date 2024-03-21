@@ -1,7 +1,9 @@
 package com.wamk.deliveryService.services;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
+import com.wamk.deliveryService.api.assembler.EntregaAssembler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class OrderService {
 
 	@Autowired
 	private OrderRepository orderRepository;
+
+	@Autowired
+	private EntregaAssembler entregaAssembler;
 	
 	@Transactional
 	public Order save(Order order) {
@@ -27,14 +32,34 @@ public class OrderService {
 	public List<Order> findAll(){
 		return orderRepository.findAll();
 	}
-	
+
+	public Order saveOrder(Order order) {
+		order.setDataEntrega(OffsetDateTime.now());
+		return orderRepository.save(order);
+	}
+
 	public Order findById(Long id) {
 		return orderRepository.findById(id).orElseThrow(
 				() -> new EntityNotFoundException());
 	}
 
-	@Transactional
-	public void delete(Order order) {
-		orderRepository.delete(order);
+	public Order update(Order order, Long id) {
+		Order orderUpdated = findById(id);
+		orderUpdated.setNameOrder(order.getNameOrder());
+		orderUpdated.setQuantity(order.getQuantity());
+		orderUpdated.setPrice(order.getPrice());
+		orderUpdated.setId(id);
+		return orderRepository.save(orderUpdated);
+	}
+
+//	@Transactional
+//	public void delete(Long id) {
+//		orderRepository.delete(findById(id));
+//	}
+
+	public void finish(Long id) {
+		Order order = findById(id);
+		order.finish();
+		orderRepository.save(order);
 	}
 }

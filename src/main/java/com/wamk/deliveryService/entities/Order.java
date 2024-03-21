@@ -3,6 +3,7 @@ package com.wamk.deliveryService.entities;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
+import com.wamk.deliveryService.dtos.OrderDTO;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -27,13 +28,10 @@ public class Order extends RepresentationModel<Order> implements Serializable{
 	private String nameOrder;
 	private Integer quantity;
 	private Double price;
-	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-	private OffsetDateTime dataPedido;
-	private OffsetDateTime dataEntrega;
-	
+	private OffsetDateTime orderDate;
+	private OffsetDateTime deliveryDate;
 	private Integer status;
-	
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
@@ -41,15 +39,21 @@ public class Order extends RepresentationModel<Order> implements Serializable{
 	public Order() {
 	}
 
-	public Order(Long id, String nameOrder, Integer quantity, Double price, OffsetDateTime dataPedido, OffsetDateTime dataEntrega, OrderStatus status, Client client) {
+	public Order(Long id, String nameOrder, Integer quantity, Double price, OffsetDateTime orderDate, OffsetDateTime deliveryDate, OrderStatus status, Client client) {
 		this.id = id;
 		this.nameOrder = nameOrder;
 		this.quantity = quantity;
 		this.price = price;
-		this.dataPedido = dataPedido;
-		this.dataEntrega = dataEntrega;
+		this.orderDate = orderDate;
+		this.deliveryDate = deliveryDate;
 		setStatus(status);
 		this.client = client;
+	}
+
+	public Order(OrderDTO orderDTO) {
+		this.nameOrder = orderDTO.getNameOrder();
+		this.quantity = orderDTO.getQuantity();
+		this.price = orderDTO.getPrice();
 	}
 	
 	public Long getId() {
@@ -84,20 +88,20 @@ public class Order extends RepresentationModel<Order> implements Serializable{
 		this.price = price;
 	}
 
-	public OffsetDateTime getDataPedido() {
-		return dataPedido;
+	public OffsetDateTime getOrderDate() {
+		return orderDate;
 	}
 
-	public void setDataPedido(OffsetDateTime dataPedido) {
-		this.dataPedido = dataPedido;
+	public void setOrderDate(OffsetDateTime orderDate) {
+		this.orderDate = orderDate;
 	}
 
-	public OffsetDateTime getDataEntrega() {
-		return dataEntrega;
+	public OffsetDateTime getDeliveryDate() {
+		return deliveryDate;
 	}
 
-	public void setDataEntrega(OffsetDateTime dataEntrega) {
-		this.dataEntrega = dataEntrega;
+	public void setDeliveryDate(OffsetDateTime deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 
 	public OrderStatus getStatus() {
@@ -120,6 +124,10 @@ public class Order extends RepresentationModel<Order> implements Serializable{
 	
 	public Double getSubtotal() {
 		return price * quantity;
+	}
+
+	public void finish() {
+		setStatus(OrderStatus.FINALIZADA);
 	}
 
 	@Override
@@ -145,18 +153,5 @@ public class Order extends RepresentationModel<Order> implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-	
-	public Order finalizar(Order order) {
-		if(NaoPodeSerFinalizada()) {
-			return order;
-		}
-		order.setStatus(OrderStatus.FINALIZADA);
-		order.setId(order.getId());
-		return order;
-	}
-	
-	public boolean NaoPodeSerFinalizada() {
-		return OrderStatus.FINALIZADA.equals(getStatus());
 	}
 }
