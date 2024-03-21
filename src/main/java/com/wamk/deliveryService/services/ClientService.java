@@ -2,6 +2,9 @@ package com.wamk.deliveryService.services;
 
 import java.util.List;
 
+import com.wamk.deliveryService.services.exception.PhoneException;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,32 +33,37 @@ public class ClientService {
 	}
 	
 	@Transactional
-	public Client insert(Client client) {
+	public Client saveWithAddress(ClientNewDTO clientNewDTO) {
+		var client = fromDTO(clientNewDTO);
+		if(clientRepository.existsBytelefone(client.getPhone()))
+			throw new PhoneException();
+		client.setId(null);
 		addressRepository.save(client.getAddress());
 		return clientRepository.save(client);
 	}
+
+	public Client update(Client clientUpdated, Long id) {
+		Client clientFinded = findById(id);
+		BeanUtils.copyProperties(clientUpdated, clientFinded);
+		clientUpdated.setId(id);
+		return clientRepository.save(clientUpdated);
+	}
 	
-	public List<Client> findAll(){
+	public List<Client> findAll() {
 		return clientRepository.findAll();
 	}
 	
 	public Client findById(Long id) {
 		return clientRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException("Id not found: " + id));	
-	}
-	
-	@Transactional
-	public Client findBytelefone(String telefone) {
-		return clientRepository.findBytelefone(telefone);
+				() -> new EntityNotFoundException());
 	}
 
-	public void delete(Client client) {
-		clientRepository.delete(client);
+	public void delete(Long id) {
+		clientRepository.delete(findById(id));
 	}
 
-	public Client fromDTO(@Valid ClientNewDTO objDTO) {
-		Address adr = new Address(null, objDTO.getCEP(), objDTO.getBairro(), objDTO.getRua(), objDTO.getNumeroCasa());
-		Client cli = new Client(null, objDTO.getName(), objDTO.getTelefone(), adr);
-		return cli;
+	public Client fromDTO(ClientNewDTO objDTO) {
+		Address adr = new Address(null, objDTO.getCEP(), objDTO.getNeighborhood(), objDTO.getStreet(), objDTO.getNumeroCasa());
+		return new Client(null, objDTO.getName(), objDTO.getPhone(), adr);
 	}
 }

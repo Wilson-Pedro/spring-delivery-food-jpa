@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wamk.deliveryService.services.exception.PhoneException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -29,19 +30,8 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler{
 	
 	@Autowired
 	private MessageSource messageSource;
-
-	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest request){
-		StandardError err = new StandardError();
-		err.setTimestemp(Instant.now());
-		err.setStatus(HttpStatus.NOT_FOUND.value());
-		err.setError("Client not found!");
-		err.setMessage(e.getMessage());
-		err.setPath(request.getRequestURI());
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
-	}
 	
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, 
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request){
 		List<Campo> campos = new ArrayList<>();
 		
@@ -59,5 +49,30 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler{
 		problema.setCampos(campos);
 		
 		return handleExceptionInternal(ex, problema, headers, status, request);
+	}
+
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<Problema> entityNotFound(){
+		HttpStatus status = HttpStatus.NOT_FOUND;
+
+		StandardError err = new StandardError();
+		Problema problema = new Problema();
+		problema.setStatus(status.value());
+		problema.setDataHora(OffsetDateTime.now());
+		problema.setTitulo("Client not found!");
+
+		return ResponseEntity.status(status).body(problema);
+	}
+
+	@ExceptionHandler(PhoneException.class)
+	public ResponseEntity<Problema> phoneException(){
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+
+		Problema problema = new Problema();
+		problema.setStatus(status.value());
+		problema.setDataHora(OffsetDateTime.now());
+		problema.setTitulo("Phone Already in use");
+
+		return ResponseEntity.status(status).body(problema);
 	}
 }

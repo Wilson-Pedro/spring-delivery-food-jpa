@@ -2,6 +2,7 @@ package com.wamk.deliveryService.dtos;
 
 import java.io.Serializable;
 
+import com.wamk.deliveryService.entities.Client;
 import jakarta.validation.constraints.NotBlank;
 
 public class ClientDTO implements Serializable{
@@ -10,15 +11,20 @@ public class ClientDTO implements Serializable{
 	@NotBlank(message = "name is mandatory")
 	private String name;
 	
-	@NotBlank(message = "contato is mandatory")
-	private String telefone;
+	@NotBlank(message = "phone is mandatory")
+	private String phone;
 	
 	public ClientDTO() {
 	}
 
-	public ClientDTO(String name, String telefone, Double total) {
+	public ClientDTO(String name, String phone, Double total) {
 		this.name = name;
-		this.telefone = telefone;
+		this.phone = phone;
+	}
+
+	public ClientDTO(Client client) {
+		name = client.getName();
+		phone = client.getPhone();
 	}
 
 	public String getName() {
@@ -29,11 +35,11 @@ public class ClientDTO implements Serializable{
 		this.name = name;
 	}
 
-	public String getTelefone() {
-		return telefone;
+	public String getPhone() {
+		return phone;
 	}
 
 	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+		this.phone = telefone;
 	}
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wamk.deliveryService.dtos.ClientDTO;
+import com.wamk.deliveryService.dtos.ClientNewDTO;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,7 +29,7 @@ public class Client extends RepresentationModel<Client> implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String telefone;
+	private String phone;
 		
 	@JsonIgnore
 	@OneToMany(mappedBy = "client")
@@ -42,12 +44,16 @@ public class Client extends RepresentationModel<Client> implements Serializable{
 	public Client() {
 	}
 
-	public Client(Long id, String name, String telefone, Address address) {
-		super();
+	public Client(Long id, String name, String phone, Address address) {
 		this.id = id;
 		this.name = name;
-		this.telefone = telefone;
+		this.phone = phone;
 		this.address = address;
+	}
+
+	public Client(ClientDTO clientDTO) {
+		name = clientDTO.getName();
+		phone = clientDTO.getPhone();
 	}
 
 	public Long getId() {
@@ -66,12 +72,12 @@ public class Client extends RepresentationModel<Client> implements Serializable{
 		this.name = name;
 	}
 
-	public String getTelefone() {
-		return telefone;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public List<Order> getOrders() {

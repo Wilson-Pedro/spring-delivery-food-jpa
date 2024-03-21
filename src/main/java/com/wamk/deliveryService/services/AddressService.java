@@ -28,7 +28,7 @@ public class AddressService {
 	
 	public Address findById(Long id) {
 		return addressRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException("Id not found: " + id));	
+				() -> new EntityNotFoundException());
 	}
 
 	public void delete(Address address) {

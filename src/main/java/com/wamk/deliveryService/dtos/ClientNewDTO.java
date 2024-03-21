@@ -13,20 +13,20 @@ public class ClientNewDTO implements Serializable{
 	@NotBlank(message = "name is mandatory")
 	private String name;
 	
-	@NotBlank(message = "contato is mandatory")
-	private String telefone;
+	@NotBlank(message = "phone is mandatory")
+	private String phone;
 	
 	@NotBlank(message = "CEP is mandatory")
 	private String  CEP;
 	
-	@NotBlank(message = "bairro is mandatory")
-	private String bairro;
+	@NotBlank(message = "neighborhood is mandatory")
+	private String neighborhood;
 	
-	@NotBlank(message = "rua is mandatory")
-	private String rua;
+	@NotBlank(message = "street is mandatory")
+	private String street;
 	
-	@NotNull(message = "numeroCasa cannot be null")
-	private Integer numeroCasa;
+	@NotNull(message = "houseNumber cannot be null")
+	private Integer houseNumber;
 	
 	public ClientNewDTO() {
 	}
@@ -47,12 +47,12 @@ public class ClientNewDTO implements Serializable{
 		this.name = name;
 	}
 
-	public String getTelefone() {
-		return telefone;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setTelefone(String contato) {
-		this.telefone = contato;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getCEP() {
@@ -63,27 +63,27 @@ public class ClientNewDTO implements Serializable{
 		CEP = cEP;
 	}
 
-	public String getBairro() {
-		return bairro;
+	public String getNeighborhood() {
+		return neighborhood;
 	}
 
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
+	public void setNeighborhood(String neighborhood) {
+		this.neighborhood = neighborhood;
 	}
 
-	public String getRua() {
-		return rua;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setRua(String rua) {
-		this.rua = rua;
+	public void setStreet(String street) {
+		this.street = street;
 	}
 
-	public Integer getNumeroCasa() {
-		return numeroCasa;
+	public Integer getHouseNumber() {
+		return houseNumber;
 	}
 
-	public void setNumeroCasa(Integer numeroCasa) {
-		this.numeroCasa = numeroCasa;
+	public void setHouseNumber(Integer houseNumber) {
+		this.houseNumber = houseNumber;
 	}
 }

@@ -30,7 +30,7 @@ public class OrderService {
 	
 	public Order findById(Long id) {
 		return orderRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException("Id not found: " + id));	
+				() -> new EntityNotFoundException());
 	}
 
 	@Transactional
