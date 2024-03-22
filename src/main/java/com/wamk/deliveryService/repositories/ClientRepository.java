@@ -6,5 +6,5 @@ import com.wamk.deliveryService.entities.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Long>{
 
-	boolean existsBytelefone(String telefone);
+	boolean existsByPhone(String phone);
 }

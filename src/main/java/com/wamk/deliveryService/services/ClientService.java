@@ -3,7 +3,6 @@ package com.wamk.deliveryService.services;
 import java.util.List;
 
 import com.wamk.deliveryService.services.exception.PhoneException;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,29 +22,24 @@ public class ClientService {
 
 	@Autowired
 	private ClientRepository clientRepository;
-	
+
 	@Autowired
 	private AddressRepository addressRepository;
 	
 	@Transactional
-	public Client save(Client client) {
-		return clientRepository.save(client);
-	}
-	
-	@Transactional
 	public Client saveWithAddress(ClientNewDTO clientNewDTO) {
 		var client = fromDTO(clientNewDTO);
-		if(clientRepository.existsBytelefone(client.getPhone()))
+		if(clientRepository.existsByPhone(client.getPhone()))
 			throw new PhoneException();
 		client.setId(null);
 		addressRepository.save(client.getAddress());
 		return clientRepository.save(client);
 	}
 
-	public Client update(Client clientUpdated, Long id) {
-		Client clientFinded = findById(id);
-		BeanUtils.copyProperties(clientUpdated, clientFinded);
-		clientUpdated.setId(id);
+	public Client update(Client client, Long id) {
+		Client clientUpdated = findById(id);
+		clientUpdated.setName(client.getName());
+		clientUpdated.setPhone(client.getPhone());
 		return clientRepository.save(clientUpdated);
 	}
 	
@@ -55,15 +49,17 @@ public class ClientService {
 	
 	public Client findById(Long id) {
 		return clientRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException());
+				EntityNotFoundException::new);
 	}
 
+	@Transactional
 	public void delete(Long id) {
-		clientRepository.delete(findById(id));
+		var client = findById(id);
+		clientRepository.delete(client);
 	}
 
 	public Client fromDTO(ClientNewDTO objDTO) {
-		Address adr = new Address(null, objDTO.getCEP(), objDTO.getNeighborhood(), objDTO.getStreet(), objDTO.getNumeroCasa());
+		Address adr = new Address(null, objDTO.getCEP(), objDTO.getNeighborhood(), objDTO.getStreet(), objDTO.getHouseNumber());
 		return new Client(null, objDTO.getName(), objDTO.getPhone(), adr);
 	}
 }

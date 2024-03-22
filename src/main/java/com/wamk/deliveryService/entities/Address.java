@@ -2,6 +2,7 @@ package com.wamk.deliveryService.entities;
 
 import java.io.Serializable;
 
+import com.wamk.deliveryService.dtos.AddressDTO;
 import org.springframework.hateoas.RepresentationModel;
 
 import jakarta.persistence.Entity;
@@ -19,10 +20,10 @@ public class Address extends RepresentationModel<Address> implements Serializabl
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String  CEP;
-	private String bairro;
-	private String rua;
-	private Integer numeroCasa;
+	private String  cep;
+	private String neighborhood;
+	private String street;
+	private Integer houseNumber;
 	
 	@OneToOne(mappedBy = "address")
 	private Client client;
@@ -30,13 +31,19 @@ public class Address extends RepresentationModel<Address> implements Serializabl
 	public Address() {
 	}
 
-	public Address(Long id, String cEP, String bairro, String rua, Integer numeroCasa) {
-		super();
+	public Address(Long id, String cep, String neighborhood, String street, Integer houseNumber) {
 		this.id = id;
-		CEP = cEP;
-		this.bairro = bairro;
-		this.rua = rua;
-		this.numeroCasa = numeroCasa;
+		this.cep = cep;
+		this.neighborhood = neighborhood;
+		this.street = street;
+		this.houseNumber = houseNumber;
+	}
+
+	public Address(AddressDTO addressDto) {
+		cep = addressDto.getCep();
+		neighborhood = addressDto.getNeighborhood();
+		street = addressDto.getStreet();
+		houseNumber = addressDto.getHouseNumber();
 	}
 
 	public Long getId() {
@@ -47,39 +54,47 @@ public class Address extends RepresentationModel<Address> implements Serializabl
 		this.id = id;
 	}
 
-	public String getCEP() {
-		return CEP;
+	public String getCep() {
+		return cep;
 	}
 
-	public void setCEP(String cEP) {
-		CEP = cEP;
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 
-	public String getBairro() {
-		return bairro;
+	public String getNeighborhood() {
+		return neighborhood;
 	}
 
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
+	public void setNeighborhood(String neighborhood) {
+		this.neighborhood = neighborhood;
 	}
 
-	public String getRua() {
-		return rua;
+	public String getStreet() {
+		return street;
 	}
 
-	public void setRua(String rua) {
-		this.rua = rua;
+	public void setStreet(String street) {
+		this.street = street;
 	}
 
-	public Integer getNumeroCasa() {
-		return numeroCasa;
+	public Integer getHouseNumber() {
+		return houseNumber;
 	}
 
-	public void setNumeroCasa(Integer numeroCasa) {
-		this.numeroCasa = numeroCasa;
+	public void setHouseNumber(Integer houseNumber) {
+		this.houseNumber = houseNumber;
 	}
 
-//	public Client getClient() {
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	//	public Client getClient() {
 //		return client;
 //	}
 //

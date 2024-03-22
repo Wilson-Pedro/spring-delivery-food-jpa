@@ -30,6 +30,12 @@ public class AddressController {
 	@Autowired
 	private AddressService addressService;
 
+	@PostMapping
+	public ResponseEntity<Address> saveAddress(@Valid @RequestBody AddressDTO addressDTO){
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(addressService.save(new Address(addressDTO)));
+	}
+
 	@GetMapping
 	public ResponseEntity<List<Address>> findAll(){
 		List<Address> list = addressService.findAll();
@@ -43,26 +49,16 @@ public class AddressController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Address> findById(@PathVariable Long id){
+	public ResponseEntity<AddressDTO> findById(@PathVariable Long id){
 		Address address = addressService.findById(id);
 		address.add(linkTo(methodOn(AddressController.class).findAll()).withSelfRel());
-		return ResponseEntity.ok().body(address);
-	}
-	
-	@PostMapping
-	public ResponseEntity<Address> saveCleint(@Valid @RequestBody AddressDTO addressDTO){
-		var address = new Address();
-		BeanUtils.copyProperties(addressDTO, address);
-		return ResponseEntity.status(HttpStatus.CREATED).body(addressService.save(address));
+		return ResponseEntity.ok().body(new AddressDTO(address));
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Address> updateAddress(@Valid @RequestBody AddressDTO addressDTO, 
+	public ResponseEntity<AddressDTO> updateAddress(@Valid @RequestBody AddressDTO addressDTO,
 			@PathVariable Long id){
-		Address obj = addressService.findById(id);
-		var address = new Address();
-		BeanUtils.copyProperties(addressDTO, address);
-		address.setId(obj.getId());
-		return ResponseEntity.ok(addressService.save(address));
+		Address addressUpdated = addressService.update(new Address(addressDTO), id);
+		return ResponseEntity.ok(new AddressDTO(addressUpdated));
 	}
 }

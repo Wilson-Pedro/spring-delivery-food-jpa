@@ -2,6 +2,7 @@ package com.wamk.deliveryService.services;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +29,17 @@ public class AddressService {
 	
 	public Address findById(Long id) {
 		return addressRepository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException());
+				EntityNotFoundException::new);
 	}
 
-	public void delete(Address address) {
-		addressRepository.delete(address);
+	public Address update(Address address, Long id) {
+		Address addressUpdated = findById(id);
+		BeanUtils.copyProperties(address, addressUpdated);
+		addressUpdated.setId(id);
+		return addressRepository.save(addressUpdated);
 	}
+
+//	public void delete(Long id) {
+//		addressRepository.delete(findById(id));
+//	}
 }
