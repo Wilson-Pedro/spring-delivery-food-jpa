@@ -39,7 +39,7 @@ public class AddressService {
 		return addressRepository.save(addressUpdated);
 	}
 
-//	public void delete(Long id) {
-//		addressRepository.delete(findById(id));
-//	}
+	public void delete(Long id) {
+		addressRepository.delete(findById(id));
+	}
 }
