@@ -17,7 +17,7 @@ public class ClientNewDTO implements Serializable{
 	private String phone;
 	
 	@NotBlank(message = "CEP is mandatory")
-	private String  CEP;
+	private String  cep;
 	
 	@NotBlank(message = "neighborhood is mandatory")
 	private String neighborhood;
@@ -55,12 +55,22 @@ public class ClientNewDTO implements Serializable{
 		this.phone = phone;
 	}
 
-	public String getCEP() {
-		return CEP;
+	public String getCep() {
+		return cep;
 	}
 
-	public void setCEP(String cEP) {
-		CEP = cEP;
+	public ClientNewDTO(Long id, String name, String phone, String cep, String neighborhood, String street, Integer houseNumber) {
+		this.id = id;
+		this.name = name;
+		this.phone = phone;
+		this.cep = cep;
+		this.neighborhood = neighborhood;
+		this.street = street;
+		this.houseNumber = houseNumber;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 
 	public String getNeighborhood() {

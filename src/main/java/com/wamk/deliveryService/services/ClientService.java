@@ -25,13 +25,12 @@ public class ClientService {
 
 	@Autowired
 	private AddressRepository addressRepository;
-	
+
 	@Transactional
 	public Client saveWithAddress(ClientNewDTO clientNewDTO) {
+		if(clientRepository.existsByPhone(clientNewDTO.getPhone()))
+            throw new PhoneException();
 		var client = fromDTO(clientNewDTO);
-		if(clientRepository.existsByPhone(client.getPhone()))
-			throw new PhoneException();
-		client.setId(null);
 		addressRepository.save(client.getAddress());
 		return clientRepository.save(client);
 	}
@@ -55,11 +54,12 @@ public class ClientService {
 	@Transactional
 	public void delete(Long id) {
 		var client = findById(id);
+		addressRepository.delete(client.getAddress());
 		clientRepository.delete(client);
 	}
 
 	public Client fromDTO(ClientNewDTO objDTO) {
-		Address adr = new Address(null, objDTO.getCEP(), objDTO.getNeighborhood(), objDTO.getStreet(), objDTO.getHouseNumber());
+		Address adr = new Address(null, objDTO.getCep(), objDTO.getNeighborhood(), objDTO.getStreet(), objDTO.getHouseNumber());
 		return new Client(null, objDTO.getName(), objDTO.getPhone(), adr);
 	}
 }
