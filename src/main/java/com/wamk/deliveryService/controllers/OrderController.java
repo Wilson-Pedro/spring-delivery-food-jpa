@@ -66,9 +66,9 @@ public class OrderController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
-		orderService.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+//	@DeleteMapping("/{id}")
+//	public ResponseEntity<Void> delete(@PathVariable Long id) {
+//		orderService.delete(id);
+//		return ResponseEntity.noContent().build();
+//	}
 }

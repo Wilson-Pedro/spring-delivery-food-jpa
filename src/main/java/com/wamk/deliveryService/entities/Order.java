@@ -127,7 +127,7 @@ public class Order extends RepresentationModel<Order> implements Serializable{
 	}
 
 	public void finish() {
-		setStatus(OrderStatus.FINALIZADA);
+		setStatus(OrderStatus.FINISHED);
 	}
 
 	@Override
